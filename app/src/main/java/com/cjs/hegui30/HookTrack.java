@@ -79,15 +79,41 @@ public class HookTrack implements IXposedHookLoadPackage {
                 }
         );
 
+
         XposedHelpers.findAndHookMethod(
-                android.telephony.TelephonyManager.class.getName(),
+                android.telephony.TelephonyManager.class.getName(), // 需要hook的方法所在类的完整类名
+                lpparam.classLoader,                            // 类加载器，固定这么写就行了
+                "getDeviceId",                     // 需要hook的方法名
+                new DumpMethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) {
+                        XposedBridge.log(lpparam.packageName + "调用getDeviceId()获取了imei");
+                    }
+                }
+        );
+
+
+        XposedHelpers.findAndHookMethod(
+                android.content.ClipboardManager.class.getName(),
                 lpparam.classLoader,
-                "getSubscriberId",
+                "getPrimaryClip",
                 int.class,
                 new DumpMethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) {
-                        XposedBridge.log(lpparam.packageName + "调用getSubscriberId获取了imsi");
+                        XposedBridge.log(lpparam.packageName + "调用getDeviceId(int)获取了imei");
+                    }
+                }
+        );
+
+        XposedHelpers.findAndHookMethod(
+                android.content.ClipboardManager.class.getName(),
+                lpparam.classLoader,
+                "getPrimaryClip",
+                new DumpMethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) {
+                        XposedBridge.log(lpparam.packageName + "调用getPrimaryClip()获取了imsi");
                     }
                 }
         );
