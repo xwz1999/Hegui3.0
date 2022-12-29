@@ -9,6 +9,8 @@ import androidx.core.location.LocationManagerCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,7 +36,7 @@ import com.google.android.material.snackbar.Snackbar;
  * @createTime 2021/7/13 10:19
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button btn_getIMSI, btn_getMAC, btn_getGPS,btn_getIMEI;
+    private Button btn_getIMSI, btn_getMAC, btn_getGPS,btn_getIMEI,btn_getCopy;
     private TextView tv_display;
     private View container;
 
@@ -52,12 +54,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_getMAC = findViewById(R.id.btn_getMAC);
         btn_getGPS = findViewById(R.id.btn_getIGPS);
         btn_getIMEI=findViewById(R.id.btn_getIMEI);
+        btn_getCopy=findViewById(R.id.btn_getCopy);
         tv_display = findViewById(R.id.tv_display);
 
         btn_getIMSI.setOnClickListener(this);
         btn_getMAC.setOnClickListener(this);
         btn_getGPS.setOnClickListener(this);
         btn_getIMEI.setOnClickListener(this);
+        btn_getCopy.setOnClickListener(this);
     }
 
     @Override
@@ -70,8 +74,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             doGetMAC();
         }else if(v==btn_getIMEI){
             doGetIMEI();
+        }else if(v==btn_getCopy){
+            doCopy();
         }
     }
+
+
+    /**
+     * 获取剪切板数据
+     */
+    private void doCopy() {
+        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (manager != null) {
+            if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
+                CharSequence addedText = manager.getPrimaryClip().getItemAt(0).getText();
+                Log.d("位置改变", "" + addedText);
+                tv_display.setText("剪切板" + addedText);
+            }
+        }
+
+    }
+
 
     /**
      * 获取DeviceId

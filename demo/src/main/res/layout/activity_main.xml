@@ -57,4 +57,11 @@
         android:text="模拟获取DeviceId"
         android:layout_height="wrap_content"/>
 
+
+    <Button
+        android:id="@+id/btn_getCopy"
+        android:layout_width="match_parent"
+        android:text="模拟获取剪切板数据"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
